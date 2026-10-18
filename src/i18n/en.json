@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "Provodnik",
+    "tagline": "Stay Out quest planner"
+  },
+  "nav": {
+    "journal": "Journal",
+    "route": "Route",
+    "checklist": "Checklist",
+    "catalog": "Catalog",
+    "settings": "Settings",
+    "about": "About",
+    "main": "Main sections"
+  },
+  "journal": {
+    "empty": "Your journal is empty. Add the quests you currently have in the game from the catalog.",
+    "counter": "{{count}}/{{limit}}"
+  },
+  "route": {
+    "empty": "The route will appear once your journal has quests."
+  },
+  "checklist": {
+    "empty": "The checklist will appear once your journal has quests."
+  },
+  "catalog": {
+    "empty": "The quest catalog is under construction."
+  },
+  "settings": {
+    "language": "Interface language",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light"
+  },
+  "about": {
+    "intro": "Provodnik helps you plan a Stay Out run: it turns your quests into a route by location and NPC and builds one list of everything to bring.",
+    "dataTitle": "Data",
+    "dataSource": "Quest, NPC, location and item data comes from the so-wiki.ru wiki and is licensed under CC BY 4.0. Every quest links to its source page.",
+    "dataHonesty": "Some data (steps, step locations) is extracted from free text automatically and is marked as such. When something could not be determined, the app says so and suggests checking the wiki.",
+    "languageNote": "Only the interface is translated. Quest, NPC and item names and wiki texts stay in Russian, as in the source.",
+    "openWiki": "Open so-wiki.ru",
+    "license": "CC BY 4.0 license",
+    "repo": "Source code"
+  },
+  "footer": {
+    "attribution": "Data: so-wiki.ru · CC BY 4.0"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Go home"
+  },
+  "languages": {
+    "ru": "Русский",
+    "uk": "Українська",
+    "en": "English"
+  }
+}
