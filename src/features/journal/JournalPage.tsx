@@ -9,7 +9,7 @@ import {
   type DragEndEvent,
 } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { DataGate } from "../../app/DataGate";
@@ -61,6 +61,7 @@ function Journal({ data }: { data: WikiData }) {
   const [adding, setAdding] = useState(false);
   const [tab, setTab] = useState<"search" | "paste">("search");
   const [toast, setToast] = useState<Toast | null>(null);
+  const closeToast = useCallback(() => setToast(null), []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -170,14 +171,22 @@ function Journal({ data }: { data: WikiData }) {
         </SortableContext>
       </DndContext>
 
-      {toast && <ToastBar data={data} toast={toast} onClose={() => setToast(null)} />}
+      {toast && <ToastBar data={data} toast={toast} onClose={closeToast} />}
     </>
   );
 }
 
+const TOAST_MS = 8000;
+
 function ToastBar({ data, toast, onClose }: { data: WikiData; toast: Toast; onClose: () => void }) {
   const { t } = useTranslation();
   const [added, setAdded] = useState<string[]>([]);
+  // Closes by itself unless it offers next quests (that needs a decision).
+  useEffect(() => {
+    if (toast.offers?.length) return;
+    const timer = setTimeout(onClose, TOAST_MS);
+    return () => clearTimeout(timer);
+  }, [toast, onClose]);
   return (
     <div
       role="status"

@@ -17,27 +17,43 @@ from bs4 import BeautifulSoup, NavigableString, Tag
 TYPE_MAP = {"Разовое": "once", "Многоразовое": "repeatable", "Подработка": "board"}
 
 # Prerequisite status, e.g. `[в наличии, выполнено или провалено]`, as the set of quest states that satisfy it.
-PREV_STATE_WORDS = {"в наличии": "taken", "выполнено": "done", "провалено": "failed"}
-PREV_STATE_NONE = "нет в наличии и не выполнено"  # the prerequisite must NOT have been taken or done
+ALL_STATES = ("taken", "done", "failed", "none")  # canonical output order
+# Terms of a prerequisite status and the quest states each one allows; «нет …» / «не …» negate.
+PREV_STATE_TERMS = {
+    "в наличии": {"taken"},
+    "нет в наличии": {"done", "failed", "none"},
+    "выполнено": {"done"},
+    "не выполнено": {"taken", "failed", "none"},
+    "провалено": {"failed"},
+    "не провалено": {"taken", "done", "none"},
+}
 
 
 def parse_prev_status(raw: str | None) -> list[str] | None:
-    """`None` when the status cannot be read: the caller keeps `statusRaw` and marks it unknown."""
+    """Status like «в наличии, выполнено или провалено» / «не выполнено и нет в наличии» → allowed states.
+
+    «или» / «,» join alternatives, «и» narrows them. `None` when some part is not a known term
+    («выполнено 3 раза», «в момент завершения»): the caller keeps `statusRaw` and marks it unknown.
+    """
     if not raw:
         return None
-    raw = raw.strip().lower()
-    if raw == PREV_STATE_NONE:
-        return ["none"]
-    parts = [p.strip() for p in re.split(r",|\bили\b", raw) if p.strip()]
-    states = [PREV_STATE_WORDS.get(p) for p in parts]
-    return None if not states or None in states else states
+    allowed: set[str] = set()
+    for alternative in re.split(r",|\bили\b", raw.strip().lower()):
+        terms = [t.strip() for t in re.split(r"\bи\b", alternative) if t.strip()]
+        if not terms or any(t not in PREV_STATE_TERMS for t in terms):
+            return None
+        states = set(ALL_STATES)
+        for t in terms:
+            states &= PREV_STATE_TERMS[t]
+        allowed |= states
+    return [s for s in ALL_STATES if s in allowed] or None
 
 
 SQUARE_RE = re.compile(r"квадрат\w*\s+((?:[A-Z]{1,2}\d{1,2}(?:-\d)?)(?:\s*(?:,|и|или)\s*[A-Z]{1,2}\d{1,2}(?:-\d)?)*)")
 SQUARE_TOKEN_RE = re.compile(r"[A-Z]{1,2}\d{1,2}(?:-\d)?")
 STEP_NUM_RE = re.compile(r"^\s*(\d{1,2})\.\s+")
 QTY_RE = re.compile(r"[–-]\s*(?:от\s+(\d[\d\s]*)\s+до\s+(\d[\d\s]*)|от\s+(\d[\d\s]*)|(\d[\d\s]*))\s*шт")
-KILL_RE = re.compile(r"убить\s+(?:(\d+)\s+)?", re.I)
+KILL_RE = re.compile(r"убить\s+", re.I)
 KILL_QTY_RE = re.compile(r"[–-]\s*(?:от\s+(\d+)\s+до\s+(\d+)|(\d+))\s*штук")
 
 # Generic rules repeated on every page of a type; not quest-specific.
@@ -282,25 +298,30 @@ def _map_points(el: Tag) -> list[dict]:
 
 
 def _kill_targets(text: str, links: list[tuple[str, str]], dicts: Dictionaries) -> list[dict]:
-    out = []
-    if not KILL_RE.search(text):
-        return out
-    m = KILL_QTY_RE.search(text)
-    unclassified = [t for t, _ in links if dicts.classify(t) == "other"]
-    if unclassified:
-        target: dict = {"mobId": slugify(unclassified[0]), "confidence": "parsed"}
-        if m:
-            lo, hi, exact = m.groups()
-            if exact:
-                target["qty"] = int(exact)
-            else:
-                target["qtyMin"], target["qtyMax"] = int(lo), int(hi)
-        out.append(target)
-    else:
-        m2 = re.search(r"убить\s+(\d+)\s+([а-яё]+)", text, re.I)
-        if m2:
-            out.append({"mobText": m2.group(2), "qty": int(m2.group(1)), "confidence": "parsed"})
-    return out
+    """Kill target = what follows «убить»: «убить [[Моб]] - от 10 до 35 штук», «убить 10 собак»,
+    «убить из него 3 противников». A link elsewhere in the sentence (e.g. the weapon) is not the target."""
+    m = KILL_RE.search(text)
+    if not m:
+        return []
+    after = text[m.end():]
+    target: dict = {"confidence": "parsed"}
+    # «убить [[Моб]] …»: the link text right after the verb
+    for title, label in links:
+        if label and after.startswith(label) and dicts.classify(title) == "other":
+            target["mobId"] = slugify(title)
+            q = KILL_QTY_RE.search(after)
+            if q:
+                lo, hi, exact = q.groups()
+                if exact:
+                    target["qty"] = int(exact)
+                else:
+                    target["qtyMin"], target["qtyMax"] = int(lo), int(hi)
+            return [target]
+    # «убить (из него) N <кого>»
+    n = re.match(r"(?:из\s+(?:него|нее|неё|них)\s+)?(\d+)\s+([а-яё-]+)", after, re.I)
+    if n:
+        return [{"mobText": n.group(2), "qty": int(n.group(1)), "confidence": "parsed"}]
+    return []
 
 
 def _build_step(order: int, blocks: list[Tag], dicts: Dictionaries, numbered: bool) -> dict:

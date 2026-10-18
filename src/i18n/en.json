@@ -54,13 +54,34 @@
     "skip": "Skip",
     "addSelected": "Add selected ({{count}})",
     "editList": "Edit the list",
-    "pasteAdded": "Quests added: {{count}}."
+    "pasteAdded": "Quests added: {{count}}.",
+    "expand": "Details",
+    "collapse": "Collapse",
+    "openCard": "Quest card"
   },
   "route": {
-    "empty": "The route will appear once your journal has quests."
+    "empty": "The route will appear once your journal has quests.",
+    "summary": "Stops: {{stops}} · locations: {{locations}}",
+    "unknownLocation": "Location unknown",
+    "unknownHint": "The wiki gives no location for these steps — check the quest text.",
+    "alternatives": "or: {{places}}",
+    "earlier": "Earlier",
+    "later": "Later",
+    "reset": "Back to automatic order",
+    "manual": "Location order set manually.",
+    "conditions": "Has special conditions",
+    "doneToast": "Done: {{label}}",
+    "stepDone": "Mark as done"
   },
   "checklist": {
-    "empty": "The checklist will appear once your journal has quests."
+    "empty": "The checklist will appear once your journal has quests.",
+    "items": "What to bring",
+    "kills": "What to kill",
+    "have": "I have it",
+    "incomplete": "incomplete sum: some quests give no quantity",
+    "checkOnWiki": "Check the requirements on the wiki",
+    "checkOnWikiHint": "Something must be delivered or obtained here, but the items were not recognized automatically.",
+    "nothing": "No items to bring in the remaining stages."
   },
   "catalog": {
     "searchLabel": "Search quests",
@@ -175,11 +196,28 @@
     "unknown": "? pcs"
   },
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "more": "Show more ({{count}})"
   },
   "error": {
     "title": "Something went wrong",
     "text": "The page could not be shown. Your journal is saved — try reloading.",
     "reload": "Reload"
+  },
+  "step": {
+    "pickup": "Take the quest from {{npc}}",
+    "turnIn": "Hand in to {{npc}}",
+    "stages": "Stages",
+    "progress": "Stage {{n}} of {{total}}",
+    "allDone": "All stages done — mark it «Handed in» once you hand it in.",
+    "stagesHint": "Checking a stage also checks all previous ones.",
+    "hunt": "Hunt: {{name}}",
+    "point": "Point {{squares}}"
+  },
+  "filters": {
+    "type": "Quest type",
+    "location": "Location",
+    "anyLocation": "Any location",
+    "reset": "Reset filters"
   }
 }

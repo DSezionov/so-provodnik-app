@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from provodnik_scraper.fetch import RobotsRules, USER_AGENT
-from provodnik_scraper.parse import Dictionaries, parse_prev_status, parse_quest
+from provodnik_scraper.parse import Dictionaries, _kill_targets, parse_prev_status, parse_quest
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -92,7 +92,7 @@ def test_explicit_mixed_prev_logic_and_hidden(dicts):
     q = load("vozmozhno_pozzhe.html", dicts)
     assert q["hidden"] is True
     assert q["prevLogic"] == "mixed" and q["prevSeparators"] == ["или", "и"]
-    assert [p["states"] for p in q["prev"]] == [["done"], ["done"], ["none"]]
+    assert [p["states"] for p in q["prev"]] == [["done"], ["done"], ["failed", "none"]]
 
 
 @pytest.mark.parametrize("raw,expected", [
@@ -100,11 +100,26 @@ def test_explicit_mixed_prev_logic_and_hidden(dicts):
     ("в наличии или выполнено", ["taken", "done"]),
     ("в наличии, выполнено или провалено", ["taken", "done", "failed"]),
     ("выполнено или провалено", ["done", "failed"]),
-    ("нет в наличии и не выполнено", ["none"]),
+    ("нет в наличии и не выполнено", ["failed", "none"]),
+    ("не выполнено", ["taken", "failed", "none"]),
+    ("не выполнено и нет в наличии", ["failed", "none"]),
+    ("нет в наличии или выполнено", ["done", "failed", "none"]),
+    ("выполнено 3 раза", None),
     ("что-то новое", None),
 ])
 def test_prev_status(raw, expected):
     assert parse_prev_status(raw) == expected
+
+
+@pytest.mark.parametrize("text,links,expected", [
+    ("Необходимо убить Драуг - от 1 до 3 штук.", [("Драуг", "Драуг")], [{"mobId": "Драуг", "qtyMin": 1, "qtyMax": 3, "confidence": "parsed"}]),
+    ("Необходимо убить 10 собак, обитающих вдоль дороги.", [], [{"mobText": "собак", "qty": 10, "confidence": "parsed"}]),
+    # the weapon link is not the target
+    ("Вооружиться оружием IMI UZI и убить из него 5 противников.", [("IMI UZI", "IMI UZI")], [{"mobText": "противников", "qty": 5, "confidence": "parsed"}]),
+    ("Поговорить с Химиком.", [("Химик", "Химиком")], []),
+])
+def test_kill_targets(dicts, text, links, expected):
+    assert _kill_targets(text, links, dicts) == expected
 
 
 def test_auto_complete_end(dicts):

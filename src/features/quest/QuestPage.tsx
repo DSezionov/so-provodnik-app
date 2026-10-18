@@ -2,9 +2,11 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 
 import { DataGate } from "../../app/DataGate";
+import { placeText, useStepLabel } from "../../app/StepLabel";
 import { AutoMark, Badge, QtyText, Section, questPath, useNumberFormat } from "../../app/ui";
 import { entityName, titleFromId, wikiUrl } from "../../data/entities";
-import type { NpcRef, Quest, QuestLink, Reward, Step, WikiData } from "../../data/types";
+import type { NpcRef, Quest, QuestLink, Reward, WikiData } from "../../data/types";
+import { questPlan, type PlanStep } from "../../lib/plan";
 
 export function QuestPage() {
   const { id = "" } = useParams();
@@ -41,7 +43,7 @@ function QuestCard({ data, id }: { data: WikiData; id: string }) {
       {back}
       <h1 className="text-xl font-semibold leading-snug">{quest.title}</h1>
       <div className="mt-2 flex flex-wrap gap-1.5">
-        <Badge>{t(`questType.${quest.type}`)}</Badge>
+        <Badge>{quest.typeRaw ?? t(`questType.${quest.type}`)}</Badge>
         {quest.periodHours ? <Badge>{t("quest.period", { hours: quest.periodHours })}</Badge> : null}
         {quest.hidden && <Badge tone="warn">{t("catalog.hidden")}</Badge>}
       </div>
@@ -204,39 +206,41 @@ function PrevList({ data, quest }: { data: WikiData; quest: Quest }) {
 
 function StepList({ data, quest }: { data: WikiData; quest: Quest }) {
   const { t } = useTranslation();
-  if (quest.steps.length === 0) return <p className="text-[var(--muted)]">{t("quest.noSteps")}</p>;
-  // Journal stages are shown as step titles only when they line up 1:1 with the steps.
-  const stages = quest.journalStages.length === quest.steps.length ? quest.journalStages : [];
-  const anyParsed = quest.steps.some((s) => s.confidence === "parsed");
+  const label = useStepLabel(data);
+  const plan = questPlan(quest);
+  if (plan.length === 0) return <p className="text-[var(--muted)]">{t("quest.noSteps")}</p>;
+  const anyParsed = plan.some((s) => s.confidence === "parsed");
   return (
     <>
       {anyParsed && <p className="mb-3 text-sm text-[var(--muted)]">{t("quest.stepsParsed")}</p>}
       <ol className="space-y-3">
-        {quest.steps.map((step, i) => (
-          <li key={step.order} className="rounded-lg border border-[var(--border)] p-3">
-            <p className="font-medium">
-              {step.order}. {stages[i] ?? t(`stepKind.${step.kind}`)}
-            </p>
-            {step.text && <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{step.text}</p>}
-            <StepDetails data={data} step={step} />
-          </li>
-        ))}
+        {plan.map((step, i) => {
+          const title = label(step);
+          return (
+            <li key={i} className="rounded-lg border border-[var(--border)] p-3">
+              <p className="font-medium">
+                {i + 1}. {title}
+              </p>
+              {step.text && step.text !== title && <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{step.text}</p>}
+              <StepDetails data={data} step={step} />
+            </li>
+          );
+        })}
       </ol>
     </>
   );
 }
 
-function StepDetails({ data, step }: { data: WikiData; step: Step }) {
+function StepDetails({ data, step }: { data: WikiData; step: PlanStep }) {
   const { t } = useTranslation();
-  const place = (p: Step["places"][number]) =>
-    `${entityName(data.locations, p.locationId)}${p.squares.length ? ` · ${p.squares.join(", ")}` : ""}`;
+  const npc = step.npcId ? ` · ${entityName(data.npcs, step.npcId)}` : "";
   return (
     <div className="mt-2 space-y-1 text-sm">
       {step.places.length === 0 && <p className="text-amber-700 dark:text-amber-300">⚠ {t("quest.locationUnknown")}</p>}
       {step.places.length === 1 && (
         <p>
-          📍 {place(step.places[0])}
-          {step.npcId && ` · ${entityName(data.npcs, step.npcId)}`}
+          📍 {placeText(data, step.places[0])}
+          {npc}
         </p>
       )}
       {step.places.length > 1 && (
@@ -244,7 +248,7 @@ function StepDetails({ data, step }: { data: WikiData; step: Step }) {
           <p>📍 {t("quest.anyOf")}</p>
           <ul className="list-disc pl-6">
             {step.places.map((p) => (
-              <li key={p.locationId}>{place(p)}</li>
+              <li key={p.locationId}>{placeText(data, p)}</li>
             ))}
           </ul>
         </div>
