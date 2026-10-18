@@ -102,7 +102,8 @@
   "data": {
     "loading": "Loading data…",
     "error": "Could not load data: {{error}}",
-    "sample": "The catalog currently holds a sample of {{count}} quests; full data will come later."
+    "sample": "The catalog currently holds a sample of {{count}} quests; full data will come later.",
+    "retry": "Retry"
   },
   "questType": {
     "once": "One-time",
@@ -175,5 +176,10 @@
   },
   "common": {
     "close": "Close"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "text": "The page could not be shown. Your journal is saved — try reloading.",
+    "reload": "Reload"
   }
 }

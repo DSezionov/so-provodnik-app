@@ -9,12 +9,14 @@ import { RoutePage } from "../features/route/RoutePage";
 import { SettingsPage } from "../features/settings/SettingsPage";
 import { Layout } from "./Layout";
 import { NotFoundPage } from "./NotFoundPage";
+import { RouteError } from "./RouteError";
 
 // Hash routing: GitHub Pages has no SPA fallback, and the app lives under a sub-path.
 export const router = createHashRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <RouteError />,
     children: [
       { index: true, element: <JournalPage /> },
       { path: "route", element: <RoutePage /> },

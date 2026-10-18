@@ -21,6 +21,7 @@
 - `npm test` — Vitest (`src/**/*.test.ts`)
 - `npx pwa-assets-generator` — перегенерировать иконки из `public/logo.svg`
 - Сборщик: `cd scraper && .venv/bin/python -m pytest tests` — тесты парсера; запуск сборщика — см. `scraper/README.md` (сеть до so-wiki.ru — только через VPN)
+- Деплой: push в `main` → workflow `deploy` собирает `dist/` и публикует на Pages. В Settings → Pages источник должен быть **GitHub Actions**: при «Deploy from a branch» публикуется сырой репозиторий и сайт — белый экран.
 - Ширина 375px: окно Chrome уже не сжать, проверять через iframe шириной 375px на том же origin
 
 ## Язык
