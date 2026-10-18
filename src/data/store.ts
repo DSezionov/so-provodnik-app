@@ -24,7 +24,8 @@ const byId = (list: Entity[]) => new Map(list.map((e) => [e.id, e]));
 export const useDataStore = create<DataStore>((set, get) => ({
   state: { status: "idle" },
   load: async () => {
-    if (get().state.status !== "idle") return;
+    const { status } = get().state;
+    if (status === "loading" || status === "ready") return; // after an error a new call retries
     set({ state: { status: "loading" } });
     try {
       const [q, n, l, i, meta] = await Promise.all([

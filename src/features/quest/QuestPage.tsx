@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 
 import { DataGate } from "../../app/DataGate";
 import { AutoMark, Badge, QtyText, Section, questPath, useNumberFormat } from "../../app/ui";
@@ -14,10 +14,15 @@ export function QuestPage() {
 function QuestCard({ data, id }: { data: WikiData; id: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const quest = data.questById.get(id);
 
   const back = (
-    <button type="button" onClick={() => navigate(-1)} className="-ml-2 mb-2 flex min-h-11 items-center px-2 text-[var(--accent-text)]">
+    <button
+      type="button"
+      // Opened directly by a link: there is no in-app history to go back to.
+      onClick={() => (location.key === "default" ? navigate("/catalog") : navigate(-1))}
+      className="-ml-2 mb-2 flex min-h-11 items-center px-2 text-[var(--accent-text)]">
       ← {t("quest.back")}
     </button>
   );

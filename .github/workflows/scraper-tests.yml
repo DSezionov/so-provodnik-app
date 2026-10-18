@@ -4,17 +4,21 @@ on:
   push:
     paths: ["scraper/**", ".github/workflows/scraper-tests.yml"]
   pull_request:
-    paths: ["scraper/**"]
+    paths: ["scraper/**", ".github/workflows/scraper-tests.yml"]
 
 jobs:
   pytest:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.12", "3.9"]  # CI target + compatibility floor
+        include:
+          - python: "3.12" # CI target
+            os: ubuntu-latest
+          - python: "3.9" # compatibility floor; no 3.9 builds exist for Ubuntu 26.04
+            os: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - run: pip install -r requirements.txt
