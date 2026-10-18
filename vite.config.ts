@@ -12,7 +12,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: "autoUpdate",
+      // A new version waits until the user taps «Обновить» in the banner (SPEC §5.7), so nothing reloads mid-use.
+      registerType: "prompt",
+      injectRegister: false,
       manifest: {
         name: "Provodnik — Stay Out",
         short_name: "Provodnik",
@@ -35,6 +37,9 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,png,ico,json,webmanifest}"],
         // The full quests.json is several MB; Workbox silently skips files over 2 MB by default.
         maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
+        // After «Обновить» the new worker takes over open tabs (incl. a first visit that had no worker yet),
+        // which triggers the reload. It still activates only on the user's tap (registerType "prompt").
+        clientsClaim: true,
       },
     }),
   ],

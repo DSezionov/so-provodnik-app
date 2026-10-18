@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link, NavLink, Outlet } from "react-router";
 
 import { CatalogIcon, ChecklistIcon, JournalIcon, RouteIcon, SettingsIcon } from "./icons";
+import { UpdateBanner } from "./UpdateBanner";
 
 const NAV = [
   { to: "/", key: "nav.journal", Icon: JournalIcon, end: true },
@@ -20,6 +21,7 @@ export function Layout() {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-screen-sm flex-col">
+      <UpdateBanner />
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg)]/95 px-4 pt-[env(safe-area-inset-top)] backdrop-blur">
         <Link to="/" className="flex min-h-12 items-center gap-2 font-semibold">
           <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" className="size-7 rounded-md" />

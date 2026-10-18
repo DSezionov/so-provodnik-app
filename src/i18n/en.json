@@ -219,5 +219,10 @@
     "location": "Location",
     "anyLocation": "Any location",
     "reset": "Reset filters"
+  },
+  "update": {
+    "title": "A new version of the app and wiki data is available.",
+    "reload": "Update",
+    "later": "Later"
   }
 }
