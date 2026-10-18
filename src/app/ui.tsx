@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
+import type { TFunction } from "i18next";
+
 import type { Qty } from "../data/types";
+import type { QtySum } from "../lib/checklist";
 import { qtyView } from "../lib/qty";
 
 export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "accent" | "warn" }) {
@@ -23,6 +26,27 @@ export function useNumberFormat() {
   const { i18n } = useTranslation();
   const nf = new Intl.NumberFormat(i18n.resolvedLanguage ?? "ru");
   return (n: number) => nf.format(n);
+}
+
+/** «3 шт.», «20–50 шт.», «от 2 шт.», «? шт.» as plain text. */
+export function qtyString(t: TFunction, fmt: (n: number) => string, qty?: Qty): string {
+  const v = qtyView(qty);
+  switch (v.kind) {
+    case "exact":
+      return t("qty.exact", { n: fmt(v.n) });
+    case "range":
+      return t("qty.range", { min: fmt(v.min), max: fmt(v.max) });
+    case "atLeast":
+      return t("qty.atLeast", { min: fmt(v.min) });
+    default:
+      return t("qty.unknown");
+  }
+}
+
+/** A checklist total: known part as a quantity, «?» when nothing is known. */
+export function sumString(t: TFunction, fmt: (n: number) => string, sum: QtySum): string {
+  if (sum.incomplete && sum.min === 0 && sum.max === 0) return t("qty.unknown");
+  return qtyString(t, fmt, sum.max === null ? { min: sum.min } : { min: sum.min, max: sum.max });
 }
 
 export function QtyText({ qty }: { qty?: Qty }) {

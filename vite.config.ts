@@ -33,6 +33,8 @@ export default defineConfig({
       workbox: {
         // App shell + wiki data JSON are precached so everything works offline after the first visit.
         globPatterns: ["**/*.{js,css,html,svg,png,ico,json,webmanifest}"],
+        // The full quests.json is several MB; Workbox silently skips files over 2 MB by default.
+        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
       },
     }),
   ],

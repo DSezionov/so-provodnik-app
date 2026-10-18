@@ -3,7 +3,10 @@
     python -m provodnik_scraper.build            # offline, from scraper/cache
     python -m provodnik_scraper.build --fetch    # fetch missing pages politely first
 
-Until the wiki admin answers, only the 50-quest sample (sample_titles.json) is built.
+    python -m provodnik_scraper.build --all --fetch   # every quest listed on the wiki page «Задания»
+
+Without --all only the 50-quest sample (sample_titles.json) is built.
+A full first crawl is ~1760 pages × 5 s (Crawl-delay) ≈ 2.5 h; later runs reuse scraper/cache.
 """
 from __future__ import annotations
 
@@ -17,7 +20,7 @@ from urllib.parse import unquote
 
 from .fetch import BASE_URL, PoliteFetcher, page_url
 from .model import referenced_ids, title_of, to_model
-from .parse import iter_titles, load_dictionaries, parse_quest
+from .parse import iter_titles, load_dictionaries, parse_quest, smw_query_results
 
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLE = Path(__file__).resolve().parents[1] / "sample_titles.json"
@@ -36,6 +39,19 @@ def sitemap_lastmod(fetcher: PoliteFetcher) -> dict[str, str]:
     return out
 
 
+def all_quest_titles(fetcher: PoliteFetcher) -> list[str]:
+    """Every quest from the SMW table `[[Категория:Задания]]` embedded in the page «Задания»."""
+    from bs4 import BeautifulSoup
+
+    titles = []
+    for q in smw_query_results(fetcher.get(page_url("Задания")).text):
+        for row in q["query"]["result"]:
+            a = BeautifulSoup(row[0]["display"], "lxml").find("a")
+            if a and a.get("title"):
+                titles.append(a["title"])
+    return titles
+
+
 def write_json(name: str, payload: dict) -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / name).write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
@@ -43,7 +59,8 @@ def write_json(name: str, payload: dict) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--fetch", action="store_true")
+    ap.add_argument("--fetch", action="store_true", help="fetch missing pages (polite, Crawl-delay)")
+    ap.add_argument("--all", action="store_true", help="all quests from the wiki, not just the sample")
     args = ap.parse_args()
     fetcher = PoliteFetcher(offline=not args.fetch)
 
@@ -52,12 +69,27 @@ def main() -> None:
     npc_locations = {slugify_title(k): slugify_title(v["location"]) for k, v in dicts.npcs.items() if v["location"]}
     lastmod = sitemap_lastmod(fetcher)
 
-    quests = []
-    for _, title in iter_titles(json.loads(SAMPLE.read_text())):
+    titles = all_quest_titles(fetcher) if args.all else [t for _, t in iter_titles(json.loads(SAMPLE.read_text()))]
+    quests, failed, not_quest = [], [], []
+    for n, title in enumerate(titles, 1):
         url = page_url(title)
-        parsed = parse_quest(fetcher.get(url).text, dicts, url)
+        try:
+            resp = fetcher.get(url)
+        except Exception as e:  # network error or not cached in offline mode: report, keep going
+            failed.append(f"{title}: {e}")
+            continue
+        if resp.status != 200 or "quest-base-info" not in resp.text:
+            not_quest.append(title)
+            continue
+        parsed = parse_quest(resp.text, dicts, url)
         quests.append(to_model(parsed, npc_locations, lastmod.get(title)))
+        if n % 50 == 0:
+            print(f"  {n}/{len(titles)} pages, network requests so far: {fetcher.network_requests}", flush=True)
     quests.sort(key=lambda q: q["title"])
+    if failed:
+        print(f"failed: {len(failed)}", *failed[:20], sep="\n  ")
+    if not_quest:
+        print(f"skipped (no quest infobox): {len(not_quest)}", *not_quest[:20], sep="\n  ")
 
     npc_ids, location_ids, item_ids = referenced_ids(quests)
     npc_by_id = {slugify_title(k): v for k, v in dicts.npcs.items()}
@@ -80,7 +112,7 @@ def main() -> None:
         "version": version,
         "source": "https://so-wiki.ru",
         "license": "CC BY 4.0",
-        "sample": True,  # only the 50-quest sample until the full crawl (SPEC §7)
+        "sample": not args.all,
         "counts": {"quests": len(quests), "npcs": len(npcs), "locations": len(locations), "items": len(items)},
     })
     print(f"wrote {OUT_DIR}: {len(quests)} quests, {len(npcs)} npcs, {len(locations)} locations, {len(items)} items")

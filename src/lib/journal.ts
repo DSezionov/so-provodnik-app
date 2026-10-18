@@ -6,7 +6,7 @@ export interface JournalEntry {
   /** taken — already taken in the game (default); planned — going to take it on this run */
   status: "taken" | "planned";
   order: number;
-  /** 1-based step to continue from («я уже на шаге N») */
+  /** 1-based step of the quest plan to continue from («я уже на шаге N»); plan length + 1 — all done */
   currentStep: number;
   /** itemId / mobId → actual quantity given by the game (for ranges) */
   qtyOverride?: Record<string, number>;
@@ -94,8 +94,9 @@ export function moveEntryBy(entries: JournalEntry[], questId: string, delta: -1 
   return moveEntryTo(list, questId, list[to].questId);
 }
 
+/** `step` is 1-based over the quest plan; `stepCount + 1` means every step is done. */
 export function setCurrentStep(entries: JournalEntry[], questId: string, step: number, stepCount: number): JournalEntry[] {
-  const clamped = Math.min(Math.max(1, Math.round(step)), Math.max(1, stepCount));
+  const clamped = Math.min(Math.max(1, Math.round(step)), Math.max(1, stepCount) + 1);
   return entries.map((e) => (e.questId === questId ? { ...e, currentStep: clamped } : e));
 }
 

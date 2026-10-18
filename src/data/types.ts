@@ -75,6 +75,8 @@ export interface Quest {
   title: string;
   url: string;
   type: QuestType;
+  /** wiki type name for `type: "other"` (Праздничное, PvP, Соревнование…) */
+  typeRaw?: string;
   periodHours?: number;
   hidden: boolean;
   variant?: VariantRef;

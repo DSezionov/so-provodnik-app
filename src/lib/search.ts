@@ -1,6 +1,6 @@
 import MiniSearch from "minisearch";
 
-import type { Quest } from "../data/types";
+import type { Quest, QuestType } from "../data/types";
 
 /** Case-, ё/е- and quote-insensitive form used both for indexing and for queries. */
 export function normalize(text: string): string {
@@ -43,7 +43,7 @@ function questNpcs(q: Quest): string[] {
   return [...new Set(ids.filter((x): x is string => !!x))];
 }
 
-function questLocations(q: Quest): string[] {
+export function questLocations(q: Quest): string[] {
   const ids = [q.start?.locationId, q.end?.kind === "npc" ? q.end.locationId : undefined, ...q.steps.flatMap((s) => s.places.map((p) => p.locationId))];
   return [...new Set(ids.filter((x): x is string => !!x))];
 }
@@ -80,7 +80,22 @@ export function buildSearchIndex(quests: Quest[], names: NameLookup): QuestSearc
  * Quests matching the query, best first; an empty query lists everything by title.
  * Variants of one quest collapse into a single hit; hidden quests are skipped unless `showHidden`.
  */
-export function searchQuests(index: QuestSearchIndex, query: string, { showHidden = false } = {}): SearchHit[] {
+export interface SearchFilters {
+  showHidden?: boolean;
+  /** empty / undefined — any type */
+  types?: QuestType[];
+  /** quest is given, done or handed in at this location */
+  locationId?: string;
+}
+
+function matchesFilters(q: Quest, { types, locationId }: SearchFilters): boolean {
+  if (types?.length && !types.includes(q.type)) return false;
+  if (locationId && !questLocations(q).includes(locationId)) return false;
+  return true;
+}
+
+export function searchQuests(index: QuestSearchIndex, query: string, filters: SearchFilters = {}): SearchHit[] {
+  const { showHidden = false } = filters;
   const q = normalize(query);
   const ordered: Quest[] = q
     ? index.mini.search(q).map((r) => index.quests.get(r.id as string)!)
@@ -90,6 +105,7 @@ export function searchQuests(index: QuestSearchIndex, query: string, { showHidde
   const seenGroups = new Set<string>();
   for (const quest of ordered) {
     if (quest.hidden && !showHidden) continue;
+    if (!matchesFilters(quest, filters)) continue;
     const groupId = quest.variant?.groupId;
     if (!groupId) {
       hits.push({ questId: quest.id });
@@ -97,7 +113,10 @@ export function searchQuests(index: QuestSearchIndex, query: string, { showHidde
     }
     if (seenGroups.has(groupId)) continue;
     seenGroups.add(groupId);
-    const variantIds = (index.groups.get(groupId) ?? [quest.id]).filter((id) => showHidden || !index.quests.get(id)!.hidden);
+    const variantIds = (index.groups.get(groupId) ?? [quest.id]).filter((id) => {
+      const v = index.quests.get(id)!;
+      return (showHidden || !v.hidden) && matchesFilters(v, filters);
+    });
     hits.push({ questId: quest.id, variantIds });
   }
   return hits;

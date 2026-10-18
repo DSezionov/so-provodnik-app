@@ -150,6 +150,8 @@ def to_model(parsed: dict, npc_locations: dict[str, str], updated_at: str | None
         "title": parsed["title"],
         "url": parsed["url"],
         "type": parsed["type"],
+        # Праздничное / PvP / Соревнование …: kept for filters, `type` is "other" for them.
+        **({"typeRaw": parsed["typeRaw"]} if parsed["type"] == "other" and parsed.get("typeRaw") else {}),
         "hidden": parsed["hidden"],
         "conditions": parsed["conditions"],
         "prev": [{"questId": p["questId"], "states": p["states"], **({"statusRaw": p["statusRaw"]} if p["statusRaw"] else {})}

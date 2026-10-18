@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import type { Quest } from "../data/types";
-import { buildSearchIndex, normalize, searchQuests } from "./search";
+import { buildSearchIndex, normalize, searchQuests, type SearchFilters } from "./search";
 import { plainNames as names, quest } from "./testQuests";
 
 const QUESTS: Quest[] = [
   quest('"Запчасти"_для_Химика', { start: { npcId: "Симург", locationId: "Везувий", confidence: "wiki" } }),
   quest('"Беленькая"_для_Свекольного'),
-  quest("Всё_не_стерилизуешь", { type: "board" }),
+  quest("Всё_не_стерилизуешь", { type: "board", start: { npcId: "Глеб_Маслов", locationId: "Окрестности_Любеча", confidence: "wiki" } }),
   quest("Пальцем_в_небо", { start: { npcId: "Леонид_Кесаревич", locationId: "Тунгуска", confidence: "wiki" } }),
   quest("Возможно_позже", { hidden: true }),
   quest("(Групп)_Бинт_антисептический_(Вез)", { variant: { groupId: "(Групп)_Бинт_антисептический", label: "Вез", confidence: "parsed" } }),
@@ -15,7 +15,7 @@ const QUESTS: Quest[] = [
 ];
 
 const index = buildSearchIndex(QUESTS, names);
-const ids = (query: string, opts?: { showHidden?: boolean }) => searchQuests(index, query, opts).map((h) => h.questId);
+const ids = (query: string, opts?: SearchFilters) => searchQuests(index, query, opts).map((h) => h.questId);
 
 describe("normalize", () => {
   it("ignores case, ё/е and quotes", () => {
@@ -54,6 +54,12 @@ describe("searchQuests", () => {
     const hits = searchQuests(index, "бинт");
     expect(hits).toHaveLength(1);
     expect(hits[0].variantIds).toEqual(["(Групп)_Бинт_антисептический_(Вез)", "(Групп)_Бинт_антисептический_(ЧЛ)"]);
+  });
+
+  it("filters by quest type and by location", () => {
+    expect(ids("", { types: ["board"] })).toEqual(["Всё_не_стерилизуешь"]);
+    expect(ids("", { locationId: "Везувий" })).toEqual(['"Запчасти"_для_Химика']);
+    expect(ids("пальцем", { types: ["board"] })).toEqual([]);
   });
 
   it("lists everything by title for an empty query", () => {

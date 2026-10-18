@@ -71,7 +71,7 @@ describe("per-entry settings", () => {
   const entries = addEntries([], ["A"], NOW).entries;
 
   it("clamps the current step to the quest's steps", () => {
-    expect(setCurrentStep(entries, "A", 9, 3)[0].currentStep).toBe(3);
+    expect(setCurrentStep(entries, "A", 9, 3)[0].currentStep).toBe(4); // 4 = all 3 steps done
     expect(setCurrentStep(entries, "A", 0, 3)[0].currentStep).toBe(1);
   });
 
