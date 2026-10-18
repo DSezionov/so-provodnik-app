@@ -6,8 +6,9 @@ import { DataGate } from "../../app/DataGate";
 import { PageHeader } from "../../app/PageHeader";
 import { Badge, questPath } from "../../app/ui";
 import { entityName } from "../../data/entities";
+import { getSearchIndex } from "../../data/searchIndex";
 import type { WikiData } from "../../data/types";
-import { buildSearchIndex, searchQuests } from "../../lib/search";
+import { searchQuests } from "../../lib/search";
 
 export function CatalogPage() {
   const { t } = useTranslation();
@@ -26,14 +27,7 @@ function Catalog({ data }: { data: WikiData }) {
   const query = params.get("q") ?? "";
   const showHidden = params.get("hidden") === "1";
 
-  const index = useMemo(
-    () =>
-      buildSearchIndex(data.quests, {
-        npc: (id) => entityName(data.npcs, id),
-        location: (id) => entityName(data.locations, id),
-      }),
-    [data],
-  );
+  const index = getSearchIndex(data);
   const hits = useMemo(() => searchQuests(index, query, { showHidden }), [index, query, showHidden]);
 
   const update = (next: { q?: string; hidden?: boolean }) => {

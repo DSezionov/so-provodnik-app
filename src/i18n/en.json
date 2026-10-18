@@ -13,8 +13,48 @@
     "main": "Main sections"
   },
   "journal": {
-    "empty": "Your journal is empty. Add the quests you currently have in the game from the catalog.",
-    "counter": "{{count}}/{{limit}}"
+    "empty": "Your journal is empty. Add the quests you currently have in the game.",
+    "counter": "{{count}}/{{limit}}",
+    "planned": "planned: {{count}}",
+    "counterLabel": "Quests taken: {{count}} of {{limit}}",
+    "add": "Add quests",
+    "addDone": "Done",
+    "tabSearch": "Search",
+    "tabPaste": "Paste a list",
+    "inJournal": "in journal",
+    "addOne": "Add",
+    "chooseVariant": "Variant:",
+    "addedAsPlanned": "You already have 50 taken quests — added as planned: {{count}}.",
+    "statusLimit": "Can't mark as taken: you already have 50 taken quests.",
+    "statusLabel": "Quest status",
+    "statusTaken": "Taken",
+    "statusPlanned": "Planned",
+    "stepLabel": "Current step",
+    "stepOption": "Step {{n}}: {{label}}",
+    "qtyTitle": "Amount the game asked for",
+    "qtyPlaceholder": "?",
+    "moveUp": "Up",
+    "moveDown": "Down",
+    "dragHandle": "Drag to reorder",
+    "complete": "Handed in",
+    "remove": "Remove",
+    "removedToast": "Removed: {{title}}",
+    "completedToast": "Handed in: {{title}}",
+    "undo": "Undo",
+    "nextOffer": "{{npc}} gives next: {{title}}",
+    "addPlanned": "Add as planned",
+    "addedPlanned": "Added: {{title}}",
+    "storageError": "Browser storage is unavailable — journal changes will be lost on reload.",
+    "pastePlaceholder": "One quest per line, for example:\nЗапчасти для Химика\nНайти Лешича",
+    "pasteLabel": "Quest list",
+    "recognize": "Match",
+    "recognized": "Matched",
+    "ambiguous": "Several candidates — pick one",
+    "notFound": "Not found",
+    "skip": "Skip",
+    "addSelected": "Add selected ({{count}})",
+    "editList": "Edit the list",
+    "pasteAdded": "Quests added: {{count}}."
   },
   "route": {
     "empty": "The route will appear once your journal has quests."
@@ -132,5 +172,8 @@
     "range": "{{min}}–{{max}} pcs",
     "atLeast": "{{min}}+ pcs",
     "unknown": "? pcs"
+  },
+  "common": {
+    "close": "Close"
   }
 }

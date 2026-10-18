@@ -13,8 +13,48 @@
     "main": "Основні розділи"
   },
   "journal": {
-    "empty": "Журнал порожній. Додайте завдання, які зараз є у вас у грі, — через каталог.",
-    "counter": "{{count}}/{{limit}}"
+    "empty": "Журнал порожній. Додайте завдання, які зараз є у вас у грі.",
+    "counter": "{{count}}/{{limit}}",
+    "planned": "планую: {{count}}",
+    "counterLabel": "Взято завдань: {{count}} з {{limit}}",
+    "add": "Додати завдання",
+    "addDone": "Готово",
+    "tabSearch": "Пошук",
+    "tabPaste": "Вставити списком",
+    "inJournal": "у журналі",
+    "addOne": "Додати",
+    "chooseVariant": "Варіація:",
+    "addedAsPlanned": "У журналі вже 50 взятих завдань — додано як «планую»: {{count}}.",
+    "statusLimit": "Не можна позначити як взяте: у журналі вже 50 взятих завдань.",
+    "statusLabel": "Статус завдання",
+    "statusTaken": "Взято",
+    "statusPlanned": "Планую",
+    "stepLabel": "Поточний крок",
+    "stepOption": "Крок {{n}}: {{label}}",
+    "qtyTitle": "Скільки видала гра",
+    "qtyPlaceholder": "?",
+    "moveUp": "Вище",
+    "moveDown": "Нижче",
+    "dragHandle": "Перетягніть, щоб змінити порядок",
+    "complete": "Здано",
+    "remove": "Видалити",
+    "removedToast": "Видалено: {{title}}",
+    "completedToast": "Здано: {{title}}",
+    "undo": "Скасувати",
+    "nextOffer": "{{npc}} дасть далі: {{title}}",
+    "addPlanned": "Додати «планую»",
+    "addedPlanned": "Додано: {{title}}",
+    "storageError": "Пам'ять браузера недоступна — зміни журналу зникнуть після перезавантаження.",
+    "pastePlaceholder": "По одному завданню на рядок, наприклад:\nЗапчасти для Химика\nНайти Лешича",
+    "pasteLabel": "Список завдань",
+    "recognize": "Розпізнати",
+    "recognized": "Розпізнано",
+    "ambiguous": "Кілька кандидатів — оберіть",
+    "notFound": "Не знайдено",
+    "skip": "Пропустити",
+    "addSelected": "Додати вибрані ({{count}})",
+    "editList": "Змінити список",
+    "pasteAdded": "Додано завдань: {{count}}."
   },
   "route": {
     "empty": "Маршрут з'явиться, коли в журналі будуть завдання."
@@ -132,5 +172,8 @@
     "range": "{{min}}–{{max}} шт.",
     "atLeast": "від {{min}} шт.",
     "unknown": "? шт."
+  },
+  "common": {
+    "close": "Закрити"
   }
 }

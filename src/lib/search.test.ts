@@ -2,27 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { Quest } from "../data/types";
 import { buildSearchIndex, normalize, searchQuests } from "./search";
-
-function quest(id: string, extra: Partial<Quest> = {}): Quest {
-  return {
-    id,
-    title: id.replace(/_/g, " "),
-    url: "",
-    type: "once",
-    hidden: false,
-    conditions: [],
-    prev: [],
-    prevLogic: "and",
-    next: [],
-    journalStages: [],
-    steps: [],
-    rewards: [],
-    rawProcess: "",
-    notes: [],
-    revision: 1,
-    ...extra,
-  };
-}
+import { plainNames as names, quest } from "./testQuests";
 
 const QUESTS: Quest[] = [
   quest('"Запчасти"_для_Химика', { start: { npcId: "Симург", locationId: "Везувий", confidence: "wiki" } }),
@@ -34,7 +14,6 @@ const QUESTS: Quest[] = [
   quest("(Групп)_Бинт_антисептический_(ЧЛ)", { variant: { groupId: "(Групп)_Бинт_антисептический", label: "ЧЛ", confidence: "parsed" } }),
 ];
 
-const names = { npc: (id: string) => id.replace(/_/g, " "), location: (id: string) => id.replace(/_/g, " ") };
 const index = buildSearchIndex(QUESTS, names);
 const ids = (query: string, opts?: { showHidden?: boolean }) => searchQuests(index, query, opts).map((h) => h.questId);
 
