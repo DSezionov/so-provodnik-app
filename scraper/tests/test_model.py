@@ -101,7 +101,7 @@ def test_auto_end_and_unknown_logic():
     assert build("pyaltsem_v_nebo.html")["end"] == {"kind": "auto", "confidence": "wiki"}
     q = build("vozmozhno_pozzhe.html")
     assert q["prevLogic"] == "unknown" and q["hidden"] is True
-    assert q["prev"][2] == {"questId": "Пошел_искать_и_потерялся", "states": ["none"], "statusRaw": "нет в наличии и не выполнено"}
+    assert q["prev"][2] == {"questId": "Пошел_искать_и_потерялся", "states": ["failed", "none"], "statusRaw": "нет в наличии и не выполнено"}
 
 
 def test_group_variant_quest():
