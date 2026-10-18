@@ -1,0 +1,90 @@
+# Основные правила для всех ботов
+User-agent: *
+Disallow: /w/
+Disallow: /wiki/edit/
+Disallow: /wiki/history/
+Disallow: /wiki/purge/
+Disallow: /wiki/info/
+Disallow: /wiki/Special:
+Disallow: /wiki/Служебная:
+Disallow: /*diff=
+Disallow: /*oldid=
+Disallow: /*limit=250
+Disallow: /*limit=500
+Disallow: /*action=history
+Disallow: /*action=edit
+Disallow: /*action=purge
+Allow: /ads.txt
+Crawl-delay: 5
+
+# Google
+User-agent: Googlebot
+Disallow: /w/
+Disallow: /wiki/edit/
+Disallow: /wiki/history/
+Disallow: /wiki/purge/
+Disallow: /wiki/info/
+Disallow: /wiki/Special:
+Disallow: /wiki/Служебная:
+Disallow: /*diff=
+Disallow: /*oldid=
+Disallow: /*limit=250
+Disallow: /*limit=500
+Disallow: /*action=history
+Disallow: /*action=edit
+Disallow: /*action=purge
+
+# Yandex
+User-agent: Yandex
+Disallow: /w/
+Disallow: /wiki/edit/
+Disallow: /wiki/history/
+Disallow: /wiki/purge/
+Disallow: /wiki/info/
+Disallow: /wiki/Special:
+Disallow: /wiki/Служебная:
+Disallow: /*diff=
+Disallow: /*oldid=
+Disallow: /*limit=250
+Disallow: /*limit=500
+Disallow: /*action=history
+Disallow: /*action=edit
+Disallow: /*action=purge
+Crawl-delay: 5
+
+# Bing
+User-agent: Bingbot
+Disallow: /w/
+Disallow: /wiki/edit/
+Disallow: /wiki/history/
+Disallow: /wiki/purge/
+Disallow: /wiki/info/
+Disallow: /wiki/Special:
+Disallow: /wiki/Служебная:
+Disallow: /*diff=
+Disallow: /*oldid=
+Disallow: /*limit=250
+Disallow: /*limit=500
+Disallow: /*action=history
+Disallow: /*action=edit
+Disallow: /*action=purge
+Crawl-delay: 10
+
+# Заблокированные боты
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Timpibot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap
+Sitemap: https://so-wiki.ru/sitemap.xml
