@@ -23,7 +23,13 @@
     "empty": "The checklist will appear once your journal has quests."
   },
   "catalog": {
-    "empty": "The quest catalog is under construction."
+    "searchLabel": "Search quests",
+    "searchPlaceholder": "Title, NPC or location",
+    "showHidden": "Show hidden",
+    "hidden": "hidden",
+    "variants": "variants: {{count}}",
+    "results": "Found: {{count}}",
+    "noResults": "Nothing found. Check the spelling or show hidden quests."
   },
   "settings": {
     "language": "Interface language",
@@ -52,5 +58,79 @@
     "ru": "Русский",
     "uk": "Українська",
     "en": "English"
+  },
+  "data": {
+    "loading": "Loading data…",
+    "error": "Could not load data: {{error}}",
+    "sample": "The catalog currently holds a sample of {{count}} quests; full data will come later."
+  },
+  "questType": {
+    "once": "One-time",
+    "repeatable": "Repeatable",
+    "board": "Side job",
+    "other": "Other"
+  },
+  "quest": {
+    "back": "Back",
+    "notFound": "Quest not found in the data.",
+    "period": "every {{hours}} h",
+    "hiddenNote": "Hidden quest: it does not appear in the in-game journal.",
+    "variant": "Variant",
+    "start": "Start",
+    "end": "End",
+    "autoEnd": "Completes automatically",
+    "conditions": "Special conditions",
+    "prev": "Previous quests",
+    "next": "Next quests",
+    "none": "none",
+    "prevLogic": {
+      "and": "All conditions are required.",
+      "or": "Any one condition is enough.",
+      "unknown": "The wiki does not say how the conditions combine (AND/OR)."
+    },
+    "description": "Description",
+    "steps": "Steps",
+    "stepsParsed": "Steps, locations and NPCs were extracted automatically — compare with the process text below.",
+    "noSteps": "Steps could not be extracted — see the process text below.",
+    "locationUnknown": "Location unknown",
+    "anyOf": "Any of:",
+    "items": "Bring",
+    "kills": "Kill",
+    "rawProcess": "Walkthrough (wiki text)",
+    "tip": "Tip",
+    "notes": "Notes",
+    "rewards": "Reward",
+    "noRewards": "None",
+    "perUnit": "Rewards are per unit: the total depends on the quantity you are given.",
+    "openWiki": "Open on so-wiki.ru",
+    "autoCheck": "auto, verify"
+  },
+  "questState": {
+    "taken": "taken",
+    "done": "completed",
+    "failed": "failed",
+    "none": "not taken and not completed",
+    "unknown": "status unknown"
+  },
+  "stepKind": {
+    "talk": "Talk",
+    "deliver": "Hand in",
+    "collect": "Obtain",
+    "kill": "Kill",
+    "goto": "Go to",
+    "other": "Action"
+  },
+  "reward": {
+    "money": "{{value}} ₽",
+    "xp": "{{value}} XP",
+    "rep": "reputation",
+    "trade": "trade points",
+    "group": "{{value}} faction points"
+  },
+  "qty": {
+    "exact": "{{n}} pcs",
+    "range": "{{min}}–{{max}} pcs",
+    "atLeast": "{{min}}+ pcs",
+    "unknown": "? pcs"
   }
 }
