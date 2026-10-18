@@ -1,0 +1,24 @@
+name: scraper-tests
+
+on:
+  push:
+    paths: ["scraper/**", ".github/workflows/scraper-tests.yml"]
+  pull_request:
+    paths: ["scraper/**"]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.12", "3.9"]  # CI target + compatibility floor
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -r requirements.txt
+        working-directory: scraper
+      # Offline: tests use cached fixture pages only, no requests to the wiki.
+      - run: python -m pytest tests
+        working-directory: scraper

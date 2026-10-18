@@ -1,0 +1,179 @@
+{
+  "app": {
+    "name": "Provodnik",
+    "tagline": "Stay Out quest planner"
+  },
+  "nav": {
+    "journal": "Journal",
+    "route": "Route",
+    "checklist": "Checklist",
+    "catalog": "Catalog",
+    "settings": "Settings",
+    "about": "About",
+    "main": "Main sections"
+  },
+  "journal": {
+    "empty": "Your journal is empty. Add the quests you currently have in the game.",
+    "counter": "{{count}}/{{limit}}",
+    "planned": "planned: {{count}}",
+    "counterLabel": "Quests taken: {{count}} of {{limit}}",
+    "add": "Add quests",
+    "addDone": "Done",
+    "tabSearch": "Search",
+    "tabPaste": "Paste a list",
+    "inJournal": "in journal",
+    "addOne": "Add",
+    "chooseVariant": "Variant:",
+    "addedAsPlanned": "You already have 50 taken quests — added as planned: {{count}}.",
+    "statusLimit": "Can't mark as taken: you already have 50 taken quests.",
+    "statusLabel": "Quest status",
+    "statusTaken": "Taken",
+    "statusPlanned": "Planned",
+    "stepLabel": "Current step",
+    "stepOption": "Step {{n}}: {{label}}",
+    "qtyTitle": "Amount the game asked for",
+    "qtyPlaceholder": "?",
+    "moveUp": "Up",
+    "moveDown": "Down",
+    "dragHandle": "Drag to reorder",
+    "complete": "Handed in",
+    "remove": "Remove",
+    "removedToast": "Removed: {{title}}",
+    "completedToast": "Handed in: {{title}}",
+    "undo": "Undo",
+    "nextOffer": "{{npc}} gives next: {{title}}",
+    "addPlanned": "Add as planned",
+    "addedPlanned": "Added: {{title}}",
+    "storageError": "Browser storage is unavailable — journal changes will be lost on reload.",
+    "pastePlaceholder": "One quest per line, for example:\nЗапчасти для Химика\nНайти Лешича",
+    "pasteLabel": "Quest list",
+    "recognize": "Match",
+    "recognized": "Matched",
+    "ambiguous": "Several candidates — pick one",
+    "notFound": "Not found",
+    "skip": "Skip",
+    "addSelected": "Add selected ({{count}})",
+    "editList": "Edit the list",
+    "pasteAdded": "Quests added: {{count}}."
+  },
+  "route": {
+    "empty": "The route will appear once your journal has quests."
+  },
+  "checklist": {
+    "empty": "The checklist will appear once your journal has quests."
+  },
+  "catalog": {
+    "searchLabel": "Search quests",
+    "searchPlaceholder": "Title, NPC or location",
+    "showHidden": "Show hidden",
+    "hidden": "hidden",
+    "variants": "variants: {{count}}",
+    "results": "Found: {{count}}",
+    "noResults": "Nothing found. Check the spelling or show hidden quests."
+  },
+  "settings": {
+    "language": "Interface language",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light"
+  },
+  "about": {
+    "intro": "Provodnik helps you plan a Stay Out run: it turns your quests into a route by location and NPC and builds one list of everything to bring.",
+    "dataTitle": "Data",
+    "dataSource": "Quest, NPC, location and item data comes from the so-wiki.ru wiki and is licensed under CC BY 4.0. Every quest links to its source page.",
+    "dataHonesty": "Some data (steps, step locations) is extracted from free text automatically and is marked as such. When something could not be determined, the app says so and suggests checking the wiki.",
+    "languageNote": "Only the interface is translated. Quest, NPC and item names and wiki texts stay in Russian, as in the source.",
+    "openWiki": "Open so-wiki.ru",
+    "license": "CC BY 4.0 license",
+    "repo": "Source code"
+  },
+  "footer": {
+    "attribution": "Data: so-wiki.ru · CC BY 4.0"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Go home"
+  },
+  "languages": {
+    "ru": "Русский",
+    "uk": "Українська",
+    "en": "English"
+  },
+  "data": {
+    "loading": "Loading data…",
+    "error": "Could not load data: {{error}}",
+    "sample": "The catalog currently holds a sample of {{count}} quests; full data will come later."
+  },
+  "questType": {
+    "once": "One-time",
+    "repeatable": "Repeatable",
+    "board": "Side job",
+    "other": "Other"
+  },
+  "quest": {
+    "back": "Back",
+    "notFound": "Quest not found in the data.",
+    "period": "every {{hours}} h",
+    "hiddenNote": "Hidden quest: it does not appear in the in-game journal.",
+    "variant": "Variant",
+    "start": "Start",
+    "end": "End",
+    "autoEnd": "Completes automatically",
+    "conditions": "Special conditions",
+    "prev": "Previous quests",
+    "next": "Next quests",
+    "none": "none",
+    "prevLogic": {
+      "and": "All conditions are required.",
+      "or": "Any one condition is enough.",
+      "unknown": "The wiki does not say how the conditions combine (AND/OR)."
+    },
+    "description": "Description",
+    "steps": "Steps",
+    "stepsParsed": "Steps, locations and NPCs were extracted automatically — compare with the process text below.",
+    "noSteps": "Steps could not be extracted — see the process text below.",
+    "locationUnknown": "Location unknown",
+    "anyOf": "Any of:",
+    "items": "Bring",
+    "kills": "Kill",
+    "rawProcess": "Walkthrough (wiki text)",
+    "tip": "Tip",
+    "notes": "Notes",
+    "rewards": "Reward",
+    "noRewards": "None",
+    "perUnit": "Rewards are per unit: the total depends on the quantity you are given.",
+    "openWiki": "Open on so-wiki.ru",
+    "autoCheck": "auto, verify"
+  },
+  "questState": {
+    "taken": "taken",
+    "done": "completed",
+    "failed": "failed",
+    "none": "not taken and not completed",
+    "unknown": "status unknown"
+  },
+  "stepKind": {
+    "talk": "Talk",
+    "deliver": "Hand in",
+    "collect": "Obtain",
+    "kill": "Kill",
+    "goto": "Go to",
+    "other": "Action"
+  },
+  "reward": {
+    "money": "{{value}} ₽",
+    "xp": "{{value}} XP",
+    "rep": "reputation",
+    "trade": "trade points",
+    "group": "{{value}} faction points"
+  },
+  "qty": {
+    "exact": "{{n}} pcs",
+    "range": "{{min}}–{{max}} pcs",
+    "atLeast": "{{min}}+ pcs",
+    "unknown": "? pcs"
+  },
+  "common": {
+    "close": "Close"
+  }
+}

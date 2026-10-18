@@ -97,7 +97,14 @@ def _text(el: Tag | NavigableString | None) -> str:
     clone = BeautifulSoup(str(el), "lxml")
     for junk in clone.select(".ext-floatingui-content, .maps-map, script, style"):
         junk.decompose()
-    return re.sub(r"\s+", " ", clone.get_text(" ")).strip()
+    # Separate block elements only; inline links keep the surrounding punctuation tight («Везувий,»).
+    for block in clone.select("p, li, div, br, tr, td, th, h2, h3, h4, ul, ol"):
+        block.insert_before(" ")
+        block.insert_after(" ")
+    text = re.sub(r"\s+", " ", clone.get_text("")).strip()
+    text = re.sub(r"\s+([,.;:!?)\]])", r"\1", text)
+    text = re.sub(r"([(\[])\s+", r"\1", text)
+    return re.sub(r"(?<!\.)\.\.(?!\.)", ".", text)  # «шт..» from the `Требуется` template + sentence dot
 
 
 def _num(s: str) -> int | None:

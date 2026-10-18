@@ -1,6 +1,6 @@
 # scraper — сбор данных с so-wiki.ru
 
-Статус: **Фаза 0 (разведка)**. Здесь пробный парсер и вежливый загрузчик; полный пайплайн `fetch → parse → report → build` — Фаза 1.
+Статус: вежливый загрузчик, парсер, нормализация в модель и сборка JSON для выборки из 50 заданий. Полный сбор всех 1534 заданий и CI данных — Фаза 1 (после ответа админа вики).
 
 ## Этикет: robots.txt (прочитан 2026-10-18)
 
@@ -36,7 +36,10 @@ cd scraper
 .venv/bin/python -m provodnik_scraper.probe --fetch   # докачать недостающее (≈5 с/стр.)
 .venv/bin/python -m provodnik_scraper.probe           # офлайн: метрики в stdout, разбор → data/probe/sample-quests.json
 .venv/bin/python -m pytest tests
+.venv/bin/python -m provodnik_scraper.build           # офлайн: выборка → public/data/*.json (модель SPEC §4.2)
 ```
+
+`build` — разбор (`parse.py`) → нормализация в модель (`model.py`, чистые функции с тестами) → `public/data/quests.json`, `npcs.json`, `locations.json`, `items.json`, `meta.json`. Справочники содержат только то, на что ссылаются задания. До ответа админа собирается только выборка из 50 заданий (`meta.json: "sample": true`).
 
 Выборка заданий — `scraper/sample_titles.json` (детерминированная, seed 20261018).
 

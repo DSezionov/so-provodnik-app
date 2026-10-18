@@ -15,7 +15,13 @@
 
 ## Команды
 
-(заполнить в Фазе 2: dev, build, test, scraper run)
+- `npm run dev` — dev-сервер: <http://localhost:5173/so-provodnik-app/>
+- `npm run build` — проверка типов + сборка в `dist/` (с service worker)
+- `npm run preview` — раздать `dist/` под тем же подпутём (проверка PWA и офлайна)
+- `npm test` — Vitest (`src/**/*.test.ts`)
+- `npx pwa-assets-generator` — перегенерировать иконки из `public/logo.svg`
+- Сборщик: `cd scraper && .venv/bin/python -m pytest tests` — тесты парсера; запуск сборщика — см. `scraper/README.md` (сеть до so-wiki.ru — только через VPN)
+- Ширина 375px: окно Chrome уже не сжать, проверять через iframe шириной 375px на том же origin
 
 ## Язык
 
